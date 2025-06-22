@@ -1,0 +1,6 @@
+{
+  "databaseURL": "https://wassim-dev-s-workspace-mpjrau.eu-central-1.xata.sh/db/jsm_snapcat",
+  "codegen": {
+    "output": "src/xata.ts"
+  }
+}
