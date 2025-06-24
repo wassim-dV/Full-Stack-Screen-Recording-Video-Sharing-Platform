@@ -1,97 +1,94 @@
-          'use client'
+"use client";
 
-import React from 'react'
-import Link from 'next/link'
-import Image from 'next/image'
-import { authClient } from '@/lib/auth-client'
+import Link from "next/link";
+import Image from "next/image";
 
-const page = () => {
-  const handlSignIN = async () => {
-    await authClient.signIn.social({ provider: 'google' });
-  };
-  
+import { authClient } from "@/lib/auth-client";
 
-
-
+const Page = () => {
   return (
-    <main className='sign-in'>
-      <aside className='testimonial'>
+    <main className="sign-in">
+      <aside className="testimonial">
         <Link href="/">
-        <Image src="/assets/icons/logo.svg" alt=" image" width={32} height={32}  />
-        <h1>SnapCat</h1>
+          <Image
+            src="/assets/icons/logo.svg"
+            alt="SnapChat Logo"
+            width={32}
+            height={32}
+          />
+          <h1>SnapCast</h1>
         </Link>
 
-        <div className='description'>
+        <div className="description">
           <section>
             <figure>
               {Array.from({ length: 5 }).map((_, index) => (
-                <Image 
-                  key={index} 
+                <Image
                   src="/assets/icons/star.svg"
-                  alt="star" 
-                  width={20} 
-                  height={20} 
+                  alt="Star Icon"
+                  width={20}
+                  height={20}
+                  key={index}
                 />
               ))}
             </figure>
-            <p>Snapcast make screnn recording esay.From quick walkthroughs to full presentation . its the smooth  , and shareable in seconds </p>
+            <p>
+            SnapCast makes screen recording easy. From quick walkthroughs to
+              full presentations, it&apos;s fast, smooth, and shareable in seconds
+            </p>
             <article>
-              <Image 
-                src="/assets/images/jason.png" 
-                alt="user image" 
-                width={46} 
-                height={46 } 
-                className='rounded-full' 
+              <Image
+                src="/assets/images/jason.png"
+                alt="Jason"
+                width={64}
+                height={64}
+                className="rounded-full"
               />
               <div>
-                <h2>
-                  jason Rive
-                </h2>
-                <p>prodect designer , Meta</p>
+                <h2>Jason Rivera</h2>
+                <p>Product Designer, NovaByte</p>
               </div>
-              
             </article>
           </section>
-
-
-
         </div>
-        <p> SnapCat{new Date().getFullYear()}</p>
-
+        <p>© Snapcast 2025</p>
       </aside>
-
-      <aside className='google-sign-in'>
-
+      <aside className="google-sign-in">
         <section>
-          <Link href="/"  >
-            <Image 
-              src="/assets/icons/logo.svg" 
-              alt="logo" 
-              width={41} 
-              height={41} 
+          <Link href="/">
+            <Image
+              src="/assets/icons/logo.svg"
+              alt="SnapChat Logo"
+              width={40}
+              height={40}
             />
-            <h1>SnapCat</h1>
-            
-          
+            <h1>SnapCast</h1>
           </Link>
-          <p>create and shart your vedeo <span>
-            SnapCat</span> in any time</p>
+          <p>
+            Create and share your very first <span>SnapCast video</span> in no
+            time!
+          </p>
 
-            <button  onClick={handlSignIN}>
-              <Image 
-                src="/assets/icons/google.svg" 
-                alt="google icon" 
-                width={20} 
-                height={20} 
-              />
-              <span>Sign in with Google</span>
-            </button>
+          <button
+            onClick={async () => {
+              return await authClient.signIn.social({
+                provider: "google",
+              });
+            }}
+          >
+            <Image
+              src="/assets/icons/google.svg"
+              alt="Google Icon"
+              width={22}
+              height={22}
+            />
+            <span>Sign in with Google</span>
+          </button>
         </section>
       </aside>
-      <div className='overlay'></div>
-
+      <div className="overlay" />
     </main>
-  )
-}
+  );
+};
 
-export default page
+export default Page;

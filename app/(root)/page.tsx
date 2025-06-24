@@ -1,24 +1,57 @@
-import React from 'react'
-import Header from '@/components/Header'
-import VideoCard from '@/components/VideoCard'
-import { dummyCards } from '@/constants' // أو المسار الصحيح للـ constants
+import EmptyState from "@/components/EmptyState";
+import Pagination from "@/components/Pagination";
+import SharedHeader from "@/components/SharedHeader";
+import VideoCard from "@/components/VideoCard";
+import { getAllVideos } from "@/lib/actions/video";
 
-const Page = () => {
+const page = async ({ searchParams }: SearchParams) => {
+  const { query, filter, page } = await searchParams;
+
+  const { videos, pagination } = await getAllVideos(
+    query,
+    filter,
+    Number(page) || 1
+  );
+
   return (
-    <main className='wrapper page'>
-      <Header subHeader='Your SubHeader Text' title='Your Title Text' />
-      {/* Add your header content here */}
+    <main className="wrapper page">
+      <SharedHeader subHeader="Public Library" title="All Videos" />
 
-      <h1 className='text-2xl font-karla'>test 1</h1> {/* تصحيح fond إلى font */}
-      
-      <section className='video-grid'>
+      {videos?.length > 0 ? (
+        <section className="video-grid">
+          {videos.map(({ video, user }) => (
+            <VideoCard
+              key={video.id}
+              id={video.videoId}
+              title={video.title}
+              thumbnail={video.thumbnailUrl}
+              createdAt={video.createdAt}
+              userImg={user?.image ?? ""}
+              username={user?.name ?? "Guest"}
+              views={video.views}
+              visibility={video.visibility}
+              duration={video.duration ?? 0}
+            />
+          ))}
+        </section>
+      ) : (
+        <EmptyState
+          icon="/assets/icons/video.svg"
+          title="No Videos Found"
+          description="Try adjusting your search."
+        />
+      )}
 
-      {dummyCards.map((card) => ( // إضافة { } للـ JSX expression
-        <VideoCard key={card.id} {...card} /> // إضافة key prop
-      ))}
-      </section>
+      {pagination?.totalPages > 1 && (
+        <Pagination
+          currentPage={pagination.currentPage}
+          totalPages={pagination.totalPages}
+          queryString={query}
+          filterString={filter}
+        />
+      )}
     </main>
-  )
-}
+  );
+};
 
-export default Page
+export default page;

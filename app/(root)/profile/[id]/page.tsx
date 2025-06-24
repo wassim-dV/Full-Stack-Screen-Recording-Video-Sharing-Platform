@@ -1,22 +1,51 @@
-import Header from '@/components/Header'
-import VideoCard from '@/components/VideoCard'
-import { dummyCards } from '@/constants' // أو المسار الصحيح للـ constants
+import { redirect } from "next/navigation";
 
-const page = ({params }: ParamsWithSearch) => {
-  const {id} =  params ;
+import { getAllVideosByUser } from "@/lib/actions/video";
+import  EmptyState from "@/components/EmptyState";
+import VideoCard from "@/components/VideoCard";
+import SharedHeader from "@/components/SharedHeader";
+
+const ProfilePage = async ({ params, searchParams }: ParamsWithSearch) => {
+  const { id } = await params;
+  const { query, filter } = await searchParams;
+
+  const { user, videos } = await getAllVideosByUser(id, query, filter);
+  if (!user) redirect("/404");
+
   return (
-    <div className='wrapper page'>
-      <Header subHeader="Youremail@gmail.com" title="FullName" userImg="/assets/images/dummy.jpg" /> 
+    <main className="wrapper page">
+      <SharedHeader
+        subHeader={user?.email}
+        title={user?.name}
+        userImg={user?.image ?? ""}
+      />
 
-      <section className='video-grid'>
+      {videos?.length > 0 ? (
+        <section className="video-grid">
+          {videos.map(({ video }) => (
+            <VideoCard
+              key={video.id}
+              id={video.videoId}
+              title={video.title}
+              thumbnail={video.thumbnailUrl}
+              createdAt={video.createdAt}
+              userImg={user.image ?? ""}
+              username={user.name ?? "Guest"}
+              views={video.views}
+              visibility={video.visibility}
+              duration={video.duration}
+            />
+          ))}
+        </section>
+      ) : (
+        <EmptyState
+          icon="/assets/icons/video.svg"
+          title="No Videos Available Yet"
+          description="Video will show up here once you upload them."
+        />
+      )}
+    </main>
+  );
+};
 
-      {dummyCards.map((card) => ( // إضافة { } للـ JSX expression
-        <VideoCard key={card.id} {...card} /> // إضافة key prop
-      ))}
-      </section>
-      
-      </div>
-  )
-}
-
-export default page
+export default ProfilePage;
